@@ -7,8 +7,12 @@ name = "pypi"
 ipdb = "*"
 faker = "*"
 pytest = "7.1.3"
+sqlalchemy = "*"
+alembic = "*"
+click = "*"
 
 [dev-packages]
+pytest = "*"
 
 [requires]
 python_version = "3.8.13"
