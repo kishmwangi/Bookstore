@@ -1,5 +1,5 @@
 import click
-from lib.database import Database
+from database import Database
 
 @click.group()
 def cli():
@@ -9,7 +9,7 @@ def cli():
 @click.option('--name', required=True)
 @click.option('--email', required=True)
 def add_user(name, email):
-   db = Database('data/database.db')
+    db = Database('data/database.db')
     db.connect()
     db.create_tables()
     user_id = db.insert_user(name, email)
