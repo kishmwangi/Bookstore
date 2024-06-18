@@ -1,54 +1,42 @@
 import click
-from bookstore.database import init_db, get_db
-from bookstore.models import Book, Author
-from sqlalchemy.orm import Session
+from lib.database import Database
 
 @click.group()
 def cli():
     pass
 
 @cli.command()
-def init():
-    """Initialize the database."""
-    init_db()
-    click.echo("Database initialized.")
+@click.option('--name', required=True)
+@click.option('--email', required=True)
+def add_user(name, email):
+   db = Database('data/database.db')
+    db.connect()
+    db.create_tables()
+    user_id = db.insert_user(name, email)
+    click.echo(f'User added with ID {user_id}')
+    db.close()
 
 @cli.command()
-@click.argument('name')
-def add_author(name):
-    """Add a new author."""
-    db = next(get_db())
-    author = Author(name=name)
-    db.add(author)
-    db.commit()
-    click.echo(f"Author {name} added.")
+@click.option('--title', required=True)
+@click.option('--content', required=True)
+@click.option('--author', required=True)
+def add_post(title, content, author):
+    db = Database('data/database.db')
+    db.connect()
+    db.create_tables()
+    author_id = db.insert_user(author, f'{author}@example.com')
+    post_id = db.insert_post(title, content, author_id)
+    click.echo(f'Post added with ID {post_id}')
+    db.close()
 
 @cli.command()
-@click.argument('title')
-@click.argument('author_id')
-def add_book(title, author_id):
-    """Add a new book."""
-    db = next(get_db())
-    book = Book(title=title, author_id=author_id)
-    db.add(book)
-    db.commit()
-    click.echo(f"Book {title} added.")
-
-@cli.command()
-def list_authors():
-    """List all authors."""
-    db = next(get_db())
-    authors = db.query(Author).all()
-    for author in authors:
-        click.echo(f"{author.id}: {author.name}")
-
-@cli.command()
-def list_books():
-    """List all books."""
-    db = next(get_db())
-    books = db.query(Book).all()
-    for book in books:
-        click.echo(f"{book.id}: {book.title} (Author ID: {book.author_id})")
+def list_posts():
+    db = Database('data/database.db')
+    db.connect()
+    posts = db.get_posts()
+    for post in posts:
+        click.echo(f'{post.title} by {post.author.name}')
+    db.close()
 
 if __name__ == '__main__':
     cli()
