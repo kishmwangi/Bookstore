@@ -24,6 +24,5 @@ Adds a new post to the database.
 
 Lists all the posts in the database.
 
-That's it! You can now run the application using the commands above. Make sure to replace the `data/database.db` file with your own database file.
 
-Note that this is just an example code, and you may need to modify it to fit your specific requirements. Additionally, you should ensure that your code meets the coding best practices and is well-documented.
+
